@@ -1,7 +1,5 @@
-RinqTracker v0.3
-- Team bearbeiten: Name, Kürzel, Stadt, Logo
-- Spieler bearbeiten: Name, Nummer, Position, Bild
-- Spiele, Tore, 1./2. Assists und Statistiken
-- PWA-fähig für Installation auf dem Home-Bildschirm
+RynqTracker v0.4
 
-Hosting: gesamten Ordner bei einem statischen Webhost hochladen. index.html, manifest.webmanifest und sw.js müssen zusammen bleiben.
+Neu: Spielerprofile & Game Log, Live-Tracker mit Torarten, Torhüter-Stats, Statistik-Ranglisten, Saisonverwaltung & Spielhistorie, erweiterte Teamverwaltung und Backup/Restore.
+
+GitHub Pages: index.html, manifest.webmanifest und sw.js ins Repository hochladen/ersetzen.
