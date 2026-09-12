@@ -25,11 +25,11 @@
 
 <section id="homePage" class="page">
  <button class="pill" onclick="showTeamHub()">‹ Teams</button>
- <div class="hero"><div class="label">AKTUELLES SPIEL</div><div class="teamscore"><div class="team"><div class="logo" id="homeLogo"></div><b id="homeTeam"></b></div><div class="score"><span id="homeScore">0</span> : <span id="awayScore">0</span></div><div class="team"><div class="logo">G</div><b id="awayTeam">GEGNER</b></div></div><div class="status" id="gameStatus">Noch kein Spiel gestartet</div><button class="primary" onclick="openGoal()">TOR</button><button class="secondary" onclick="openNewGame()">NEUES SPIEL</button></div>
+ <div class="hero"><div class="label">AKTUELLES SPIEL</div><div class="teamscore"><div class="team"><div class="logo" id="homeLogo"></div><b id="homeTeam"></b></div><div class="score"><span id="homeScore">0</span> : <span id="awayScore">0</span></div><div class="team"><div class="logo">G</div><b id="awayTeam">GEGNER</b></div></div><div class="status" id="gameStatus">Noch kein Spiel gestartet</div><button class="primary" id="homeGoalBtn" type="button">TOR</button><button class="secondary" onclick="openNewGame()">NEUES SPIEL</button></div>
  <h2>Punkte-Leader</h2><div class="leaders" id="leaders"></div><h2>Letzte Aktion</h2><div class="panel" id="activity">Noch keine Aktion.</div>
 </section>
 <section id="gamesPage" class="page"><h2>Spiele</h2><div id="calendar"></div><div class="row"><select id="seasonSelect" onchange="setSeason(this.value)"></select><button class="smallbtn" onclick="openSeasonManager()">＋</button></div><button class="primary" onclick="openNewGame()">＋ NEUES SPIEL</button><div id="gamesList" style="margin-top:14px"></div></section>
-<section id="trackPage" class="page"><h2>Live-Tracker</h2><div class="panel" id="trackScore"></div><button class="primary" onclick="openGoal()">TOR</button><button class="secondary" onclick="addOpponentGoal()">GEGENTOR</button><button class="secondary" onclick="openShot()">SCHUSS AUFS TOR</button><button class="secondary" onclick="openGoalieEvent()">GOALIE SAVE</button><button class="secondary" onclick="openPenalty()">STRAFE EINTRAGEN</button></section>
+<section id="trackPage" class="page"><h2>Live-Tracker</h2><div class="panel" id="trackScore"></div><button class="primary" id="trackGoalBtn" type="button">TOR</button><button class="secondary" onclick="addOpponentGoal()">GEGENTOR</button><button class="secondary" onclick="openShot()">SCHUSS AUFS TOR</button><button class="secondary" onclick="openGoalieEvent()">GOALIE SAVE</button><button class="secondary" onclick="openPenalty()">STRAFE EINTRAGEN</button></section>
 <section id="teamPage" class="page"><h2>Mannschaft</h2><button class="secondary" onclick="openTeamEdit()">TEAM BEARBEITEN</button><button class="primary" onclick="openPlayerForm()">＋ SPIELER HINZUFÜGEN</button><div id="teamList" style="margin-top:14px"></div></section>
 <section id="statsPage" class="page"><h2>Statistiken</h2><div class="tabs"><button class="chip active" onclick="setStat('p',this)">Punkte</button><button class="chip" onclick="setStat('g',this)">Tore</button><button class="chip" onclick="setStat('a',this)">Assists</button><button class="chip" onclick="setStat('ppg',this)">PPG</button><button class="chip" onclick="setStat('shotpct',this)">Torquote</button><button class="chip" onclick="setStat('pim',this)">Strafmin.</button><button class="chip" onclick="setStat('goalie',this)">Goalies</button></div><div id="statsList"></div></section>
 <section id="profilePage" class="page"><button class="pill" onclick="go('team')">‹ Zurück</button><div id="profile"></div></section>
@@ -62,6 +62,7 @@ function render(){if(bootToHub){bootToHub=false;db.activeTeamId=null}let t=team(
  $('nav').classList.remove('hidden');$('settingsBtn').classList.remove('hidden');document.documentElement.style.setProperty('--team',t.teamColors?.primary||'#2282c3');
  if(!t.activeSeason&&t.seasons[0])t.activeSeason=t.seasons[0].id;
  $('homeTeam').textContent=t.teamShort;$('homeLogo').innerHTML=t.teamLogo?`<img src="${t.teamLogo}">`:esc(t.teamShort);
+ wireGoalButtons();
  let c=t.current;$('homeScore').textContent=c?.hs||0;$('awayScore').textContent=c?.as||0;$('awayTeam').textContent=c?.opponent||'GEGNER';$('gameStatus').textContent=c?`${c.date} · ${seasonName(t.activeSeason)}`:'Noch kein Spiel gestartet';$('activity').textContent=t.activity||'Noch keine Aktion.';
  let leaders=t.players.filter(p=>p.pos!=='G').sort((a,b)=>(b.g+b.a)-(a.g+a.a)).slice(0,5);$('leaders').innerHTML=leaders.length?leaders.map(p=>`<div class="card" onclick="profile(${p.id})"><div class="photo" ${p.img?`style="background-image:url('${p.img}')"`:''}>${p.img?'':p.pos==='G'?'🥅':'🏒'}</div><div class="info"><div class="name">#${p.no} ${esc(p.n)}</div><div class="meta">${p.pos}</div><div class="pts">${p.g+p.a} <span>PUNKTE</span></div></div></div>`).join(''):'<div class="empty">Füge deine ersten Spieler hinzu.</div>';
  let playerRow=p=>`<div class="statrow click" onclick="profile(${p.id})">${p.img?`<img class="mini" src="${p.img}">`:`<div class="mini">${p.pos==='G'?'🥅':'🏒'}</div>`}<div class="grow"><b>#${p.no} ${esc(p.n)}</b><div class="meta">${p.pos} <span class="badge">${p.status}</span></div></div><div class="bigstat">${p.g+p.a} P</div></div>`;let groups=[['TORHÜTER',t.players.filter(p=>p.pos==='G')],['VERTEIDIGER',t.players.filter(p=>p.pos==='D')],['STÜRMER',t.players.filter(p=>!['G','D'].includes(p.pos))]];$('teamList').innerHTML=groups.map(([n,ps])=>`<div class="groupTitle">${n}</div>${ps.length?ps.map(playerRow).join(''):'<div class="meta">Keine</div>'}`).join('')+`<div class="groupTitle">COACH</div>${t.coach?`<div class="statrow coachCard"><div class="mini">👔</div><div class="grow"><b>${esc(t.coach)}</b><div class="meta">Head Coach</div></div></div>`:'<div class="meta">Kein Coach eingetragen.</div>'}`;
@@ -91,6 +92,27 @@ function beginGame(id){let t=team(),g=t.games.find(x=>x.id===id);if(!g||g.starte
 function chooseEndGame(id){let g=team().games.find(x=>x.id===id);if(!g)return;modal(`<h3>Spiel beenden</h3><div class="meta">Wie wurde das Spiel entschieden?</div><button class="primary" onclick="endGame(${id},'REG')">REGULÄRE SPIELZEIT</button><button class="secondary" onclick="endGame(${id},'OT')">OVERTIME</button><button class="secondary" onclick="endGame(${id},'SO')">PENALTY-SCHIESSEN</button><button class="secondary" onclick="closeM()">Abbrechen</button>`)}
 function endGame(id,decision){let t=team(),g=t.games.find(x=>x.id===id);if(!g)return;g.started=true;g.finished=true;g.decision=decision;g.finishedAt=Date.now();if(t.current?.id===id)t.current=null;t.activity=`Spiel beendet · ${g.hs}:${g.as}${decision==='OT'?' n.V.':decision==='SO'?' n.P.':''}`;closeM();save();go('games')}
 function playerButtons(action,exclude=[]){let t=team();let ps=t.players.filter(p=>p.status==='Aktiv'&&p.pos!=='G'&&!exclude.includes(p.id));return `<div class="players">${ps.map(p=>`<button class="p" onclick="${action}(${p.id})">${p.img?`<img src="${p.img}">`:`<div class="face">🏒</div>`}<b>#${p.no}</b><div>${esc(p.n)}</div></button>`).join('')}</div>`}
+function goalAction(){
+ let t=team();
+ if(!t)return;
+ let game=t.current;
+ if(!game||game.finished||!game.started){
+   game=t.games.find(g=>g.started&&!g.finished)||null;
+   if(game)t.current=game;
+ }
+ if(!game){alert('Starte zuerst ein Spiel.');return}
+ let ps=t.players.filter(p=>p.status==='Aktiv'&&p.pos!=='G');
+ if(!ps.length){alert('Füge zuerst einen aktiven Feldspieler hinzu.');return}
+ $('sheet').innerHTML=`<h3>Torschütze</h3><div class="players">${ps.map(p=>`<button type="button" class="p" data-scorer="${p.id}">${p.img?`<img src="${p.img}">`:`<div class="face">🏒</div>`}<b>#${p.no}</b><div>${esc(p.n)}</div></button>`).join('')}</div><button type="button" class="secondary" id="cancelGoal">Abbrechen</button>`;
+ $('modal').style.display='flex';
+ $('sheet').querySelectorAll('[data-scorer]').forEach(b=>b.addEventListener('click',()=>pickScorer(Number(b.dataset.scorer))));
+ $('cancelGoal').addEventListener('click',closeM);
+}
+function wireGoalButtons(){
+ let home=$('homeGoalBtn'),track=$('trackGoalBtn');
+ if(home&&!home.dataset.wired){home.addEventListener('click',goalAction);home.dataset.wired='1'}
+ if(track&&!track.dataset.wired){track.addEventListener('click',goalAction);track.dataset.wired='1'}
+}
 function openGoal(){let t=team();if(!t.current)t.current=t.games.find(g=>g.started&&!g.finished)||null;if(!t.current||!t.current.started||t.current.finished){alert('Starte zuerst ein Spiel.');return}let ps=t.players.filter(p=>p.status==='Aktiv'&&p.pos!=='G');if(!ps.length){alert('Füge zuerst einen aktiven Feldspieler hinzu.');return}modal(`<h3>Torschütze</h3><div class="players">${ps.map(p=>`<button class="p" onclick="pickScorer(${p.id})">${p.img?`<img src="${p.img}">`:`<div class="face">🏒</div>`}<b>#${p.no}</b><div>${esc(p.n)}</div></button>`).join('')}</div><button class="secondary" onclick="closeM()">Abbrechen</button>`)}
 function pickScorer(id){scorer=id;modal(`<h3>Tor-Art</h3><div class="grid"><button class="p" onclick="pickStrength('EV')">5 gegen 5</button><button class="p" onclick="pickStrength('PP')">Powerplay</button><button class="p" onclick="pickStrength('SH')">Unterzahl</button><button class="p" onclick="pickStrength('EN')">Empty Net</button><button class="p" onclick="pickStrength('PS')">Penalty Shot</button></div>`)}
 function pickStrength(s){strength=s;modal(`<h3>1. Assist</h3>${playerButtons('pickA1',[scorer])}<button class="secondary" onclick="pickA1(0)">Kein Assist</button>`)}
