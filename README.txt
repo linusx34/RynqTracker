@@ -1,0 +1,1 @@
+RynqTracker v0.7.2 – Runtime-Hotfix. Behebt den fehlenden bootToHub-Status, der direkt beim Start einen ReferenceError ausgelöst und die App unbedienbar gemacht hat.

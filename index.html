@@ -46,6 +46,7 @@
 const $=id=>document.getElementById(id), KEY='rynqV5';
 const fresh=()=>({version:5,teams:[],activeTeamId:null});
 let db;try{db=JSON.parse(localStorage.getItem(KEY))||fresh()}catch(e){db=fresh()}
+let bootToHub=true;
 let statMode='p',pendingImg='',pendingTeamLogo='',scorer=0,a1=0,strength='EV',editPlayerId=null;
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const team=()=>db.teams.find(t=>t.id===db.activeTeamId)||null;
