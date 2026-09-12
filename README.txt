@@ -1,1 +1,0 @@
-RynqTracker v0.7.1 – Hotfix auf Basis von v0.7. Keine Funktionen/Designs entfernt; JavaScript-Fehler behoben, durch den die App leer und unbedienbar war.
