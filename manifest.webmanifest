@@ -1,9 +1,1 @@
-{
-  "name": "RynqTracker",
-  "short_name": "RynqTracker",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#090b10",
-  "theme_color": "#090b10",
-  "description": "Dein persönlicher Eishockey Team- und Statistik-Tracker."
-}
+{"name":"RynqTracker","short_name":"RynqTracker","start_url":"./","display":"standalone","background_color":"#090b10","theme_color":"#090b10","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"},{"src":"icon-512.png","sizes":"512x512","type":"image/png"}]}
