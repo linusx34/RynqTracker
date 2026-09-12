@@ -1,5 +1,8 @@
-RynqTracker v0.4
+RynqTracker v0.5
 
-Neu: Spielerprofile & Game Log, Live-Tracker mit Torarten, Torhüter-Stats, Statistik-Ranglisten, Saisonverwaltung & Spielhistorie, erweiterte Teamverwaltung und Backup/Restore.
-
-GitHub Pages: index.html, manifest.webmanifest und sw.js ins Repository hochladen/ersetzen.
+Neu:
+- Start-/Teamauswahl: ohne Team beginnt RynqTracker leer.
+- Mehrere eigene Teams möglich.
+- Keine Demo-Spieler oder Demo-Mannschaft mehr.
+- Neue rote, leuchtende und wackelnde Tor-Sirene.
+- Alle bisherigen Kernfunktionen bleiben erhalten.
