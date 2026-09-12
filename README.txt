@@ -1,8 +1,1 @@
-RynqTracker v0.5
-
-Neu:
-- Start-/Teamauswahl: ohne Team beginnt RynqTracker leer.
-- Mehrere eigene Teams möglich.
-- Keine Demo-Spieler oder Demo-Mannschaft mehr.
-- Neue rote, leuchtende und wackelnde Tor-Sirene.
-- Alle bisherigen Kernfunktionen bleiben erhalten.
+RynqTracker v0.7 – basiert auf v0.6.1. Bestehendes Design beibehalten; nur angeforderte Funktionen ergänzt.
