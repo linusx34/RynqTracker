@@ -27,7 +27,7 @@ RynqTracker benötigt keinen Account. Die erfassten Daten werden lokal im Browse
 
 🚧 **In Entwicklung**
 
-Aktuelle Version: **v0.8.x**
+Aktuelle Version: **v0.8.6**
 
 ---
 
